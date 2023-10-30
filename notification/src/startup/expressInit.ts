@@ -6,9 +6,9 @@ import http from 'http';
 import { ErrorCustom } from '../types/errors';
 import { errorMessageHandler, getEnvProperty } from '../common/helpers';
 
+import healthCheck from '../routes/health-check';
 import { Logger } from '../common/logger';
 import { EnvProperty } from '../types/enums';
-import { RabbitMQWrapper } from '../common/rabbitmq-wrapper';
 
 export const expressInit = () => {
   const PORT = getEnvProperty(EnvProperty.APP_PORT);
@@ -20,10 +20,7 @@ export const expressInit = () => {
 
   const logger = new Logger('Startup');
 
-  const rabbitMQ = RabbitMQWrapper.getInstance();
-  rabbitMQ.consumeFromQueue(getEnvProperty(EnvProperty.USER_UPDATES_QUEUE), (message, headers) => {
-    console.log('Meessage', JSON.parse(message), headers);
-  });
+  app.use('/health-check', healthCheck);
 
   app.use((req, res) => {
     return res.status(404).send({ message: 'Not found!' });

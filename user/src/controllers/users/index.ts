@@ -26,9 +26,10 @@ export const createUser = catchReject(async (req: Request, res: Response, next: 
   if (error) {
     return next({ status: 400, message: error.details[0].message });
   }
-  const rabbitMQ = RabbitMQWrapper.getInstance();
-  await rabbitMQ.publishToQueue('user_updates', value, { messageType: 'created' });
   const users = await UserService.createUser(value);
+
+  const rabbitMQ = RabbitMQWrapper.getInstance();
+  await rabbitMQ.publishToQueue('user_updates', users, { messageType: 'created' });
 
   return res.send({ status: 200, data: users });
 });

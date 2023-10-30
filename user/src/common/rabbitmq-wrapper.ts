@@ -43,6 +43,17 @@ export class RabbitMQWrapper {
     }
   }
 
+  async checkConnection() {
+    try {
+      const tmpConnection = await amqp.connect(this.connectionURL);
+      tmpConnection.close();
+      return true;
+    } catch (error) {
+      this.logger.error(`Connection failed`, error);
+      return false;
+    }
+  }
+
   async close() {
     if (this.channel) {
       await this.channel.close();

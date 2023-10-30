@@ -1,5 +1,6 @@
 import { RabbitMQWrapper } from '../common/rabbitmq-wrapper';
 import { expressInit } from './expressInit';
+import { queueListenerInit } from './queueListenerInit';
 
 export const initHandler = async () => {
   return new Promise<void>(async (resolve, reject) => {
@@ -7,6 +8,7 @@ export const initHandler = async () => {
   })
     .then(() => {
       expressInit();
+      queueListenerInit();
     })
     .catch((err) => {
       throw new Error(`InitHandler failed to start`);

@@ -7,6 +7,7 @@ import { ErrorCustom } from '../types/errors';
 import { errorMessageHandler, getEnvProperty } from '../common/helpers';
 
 import users from '../routes/users';
+import healthCheck from '../routes/health-check';
 import { Logger } from '../common/logger';
 import { EnvProperty } from '../types/enums';
 
@@ -21,6 +22,7 @@ export const expressInit = () => {
   const logger = new Logger('Startup');
 
   app.use('/users', users);
+  app.use('/health-check', healthCheck);
 
   app.use((req, res) => {
     return res.status(404).send({ message: 'Not found!' });

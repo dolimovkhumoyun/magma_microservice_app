@@ -9,3 +9,16 @@ export const mongoInit = async () => {
   await mongoose.connect(connectionUrl);
   logger.info(`Connected to ${connectionUrl}...`);
 };
+
+export const checkMongoConnection = async () => {
+  const logger = new Logger('Mongo Check Connection');
+  try {
+    const connectionUrl = getEnvProperty(EnvProperty.MONGO_URL);
+    const tmpConnection = await mongoose.connect(connectionUrl);
+    await tmpConnection.disconnect();
+    return true;
+  } catch (error) {
+    logger.error(`Connection Check failed.`, error);
+    return false;
+  }
+};

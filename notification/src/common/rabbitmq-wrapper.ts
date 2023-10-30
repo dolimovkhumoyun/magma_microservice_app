@@ -37,13 +37,23 @@ export class RabbitMQWrapper {
         if (msg !== null) {
           const message = msg.content.toString();
           const headers = msg.properties.headers;
-          console.log(message);
           messageHandler(message, headers);
           this.channel?.ack(msg);
         }
       });
     } else {
       this.logger.error(`RabbitMQ was not initialized!`, 'Connection to RabbitMQ was not initialized!');
+    }
+  }
+
+  async checkConnection() {
+    try {
+      const tmpConnection = await amqp.connect(this.connectionURL);
+      tmpConnection.close();
+      return true;
+    } catch (error) {
+      this.logger.error(`Connection failed`, error);
+      return false;
     }
   }
 
