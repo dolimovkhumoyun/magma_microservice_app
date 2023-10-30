@@ -4,6 +4,7 @@ namespace NodeJS {
     APP_PORT: string;
     MONGO_URL: string;
     RABBITMQ_URL: string;
+    USER_UPDATES_QUEUE: string;
   }
 }
 

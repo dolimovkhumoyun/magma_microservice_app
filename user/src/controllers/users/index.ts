@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { catchReject } from '../../common/helpers';
+import { catchReject, getEnvProperty } from '../../common/helpers';
 import { createUserSchema, getUserSchema, updateUserSchema } from './schema';
 import { UserService } from '../../services/users';
 import { RabbitMQWrapper } from '../../common/rabbitmq-wrapper';
+import { EnvProperty } from '../../types/enums';
 
 export const getUsers = catchReject(async (req: Request, res: Response, next: NextFunction) => {
   const { error, value } = getUserSchema.validate(req.body);
@@ -29,7 +30,7 @@ export const createUser = catchReject(async (req: Request, res: Response, next: 
   const users = await UserService.createUser(value);
 
   const rabbitMQ = RabbitMQWrapper.getInstance();
-  await rabbitMQ.publishToQueue('user_updates', users, { messageType: 'created' });
+  await rabbitMQ.publishToQueue(getEnvProperty(EnvProperty.USER_UPDATES_QUEUE), users, { messageType: 'created' });
 
   return res.send({ status: 200, data: users });
 });
@@ -59,6 +60,6 @@ export const deleteUser = catchReject(async (req: Request, res: Response, next: 
     return next({ status: 404, message: 'User with such ID does not exist!' });
   }
   const rabbitMQ = RabbitMQWrapper.getInstance();
-  await rabbitMQ.publishToQueue('user_updates', user, { messageType: 'deleted' });
+  await rabbitMQ.publishToQueue(getEnvProperty(EnvProperty.USER_UPDATES_QUEUE), user, { messageType: 'deleted' });
   return res.send({ status: 200, data: user });
 });
