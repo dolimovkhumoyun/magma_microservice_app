@@ -3,3 +3,4 @@
 
 /notification/node_modules
 /notification/.env
+.docker/
