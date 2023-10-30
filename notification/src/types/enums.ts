@@ -1,0 +1,6 @@
+export enum EnvProperty {
+  APP_PORT = 'APP_PORT',
+  NODE_ENV = 'NODE_ENV',
+  RABBITMQ_URL = 'RABBITMQ_URL',
+  USER_UPDATES_QUEUE = 'USER_UPDATES_QUEUE',
+}

@@ -1,2 +1,5 @@
 /user/node_modules
 /user/.env
+
+/notification/node_modules
+/notification/.env
